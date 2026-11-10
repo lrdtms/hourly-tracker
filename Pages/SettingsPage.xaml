@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:HourlyTracker.ViewModels"
+             x:Class="HourlyTracker.Pages.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             Title="Settings">
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <Grid ColumnDefinitions="*,Auto">
+                <Label Text="Hourly prompts" FontSize="18" FontAttributes="Bold" VerticalOptions="Center" />
+                <Switch Grid.Column="1" IsToggled="{Binding Enabled}" />
+            </Grid>
+            <Label Text="{Binding NextPromptText}" />
+
+            <Label Text="How often" FontAttributes="Bold" />
+            <Picker ItemsSource="{Binding IntervalOptions}" ItemDisplayBinding="{Binding Label, x:DataType=vm:IntervalOption}"
+                    SelectedItem="{Binding SelectedInterval}" />
+
+            <Label Text="Active hours (your sleep window)" FontAttributes="Bold" Margin="0,8,0,0" />
+            <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
+                <Label Text="From" VerticalOptions="Center" />
+                <TimePicker Grid.Column="1" Time="{Binding ActiveStart}" Format="HH:mm" />
+                <Label Grid.Column="2" Text="to" VerticalOptions="Center" />
+                <TimePicker Grid.Column="3" Time="{Binding ActiveEnd}" Format="HH:mm" />
+            </Grid>
+            <Label Text="{Binding WindowHint}" FontSize="13"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray200}}" />
+
+            <Label Text="Permissions" FontSize="18" FontAttributes="Bold" Margin="0,12,0,0" />
+            <Label Text="Everything is granted — prompts will show reliably." TextColor="Green">
+                <Label.Triggers>
+                    <MultiTrigger TargetType="Label">
+                        <MultiTrigger.Conditions>
+                            <BindingCondition Binding="{Binding NeedsNotifications}" Value="False" />
+                            <BindingCondition Binding="{Binding NeedsExactAlarms}" Value="False" />
+                            <BindingCondition Binding="{Binding NeedsOverlay}" Value="False" />
+                            <BindingCondition Binding="{Binding NeedsFullScreen}" Value="False" />
+                        </MultiTrigger.Conditions>
+                        <Setter Property="IsVisible" Value="True" />
+                    </MultiTrigger>
+                </Label.Triggers>
+                <Label.Style>
+                    <Style TargetType="Label">
+                        <Setter Property="IsVisible" Value="False" />
+                    </Style>
+                </Label.Style>
+            </Label>
+
+            <VerticalStackLayout Spacing="4" IsVisible="{Binding NeedsNotifications}">
+                <Label Text="Notifications are blocked" FontAttributes="Bold" />
+                <Label Text="Needed so the prompt can show at all." FontSize="13" />
+                <Button Text="Allow notifications" Command="{Binding FixNotificationsCommand}" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="4" IsVisible="{Binding NeedsExactAlarms}">
+                <Label Text="Exact alarms are off" FontAttributes="Bold" />
+                <Label Text="Without this Android may delay prompts by several minutes." FontSize="13" />
+                <Button Text="Allow exact alarms" Command="{Binding FixExactAlarmsCommand}" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="4" IsVisible="{Binding NeedsOverlay}">
+                <Label Text="Display over other apps is off" FontAttributes="Bold" />
+                <Label Text="Lets the prompt pop up on top of whatever you're doing instead of only appearing as a notification." FontSize="13" />
+                <Button Text="Allow pop-up over other apps" Command="{Binding FixOverlayCommand}" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="4" IsVisible="{Binding NeedsFullScreen}">
+                <Label Text="Full-screen prompts are off" FontAttributes="Bold" />
+                <Label Text="Lets the prompt take over the screen when the phone is locked." FontSize="13" />
+                <Button Text="Allow full-screen prompts" Command="{Binding FixFullScreenCommand}" />
+            </VerticalStackLayout>
+
+            <Button Text="Send a test prompt now" Command="{Binding TestPromptCommand}" Margin="0,12,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

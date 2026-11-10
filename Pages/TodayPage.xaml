@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:HourlyTracker.ViewModels"
+             x:Class="HourlyTracker.Pages.TodayPage"
+             x:DataType="vm:TodayViewModel"
+             Title="Time">
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="14">
+
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                <Button Text="‹" WidthRequest="48" Command="{Binding PreviousDayCommand}" />
+                <Label Grid.Column="1" Text="{Binding DayTitle}" FontSize="22" FontAttributes="Bold"
+                       HorizontalOptions="Center" VerticalOptions="Center" />
+                <Button Grid.Column="2" Text="›" WidthRequest="48"
+                        Command="{Binding NextDayCommand}" IsEnabled="{Binding CanGoNext}" />
+            </Grid>
+
+            <Label Text="{Binding SummaryText}"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray200}}" />
+
+            <Label Text="Where your time went" FontSize="18" FontAttributes="Bold" />
+            <Label IsVisible="{Binding IsEmpty}"
+                   Text="Answer the hourly prompt (or use the Settings tab to send a test one) and your totals will show up here." />
+
+            <VerticalStackLayout Spacing="12" BindableLayout.ItemsSource="{Binding Totals}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:ActivityTotal">
+                        <VerticalStackLayout Spacing="4">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                <Label Grid.Column="1" Text="{Binding Text}" />
+                            </Grid>
+                            <ProgressBar Progress="{Binding Fraction}" />
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <Label Text="Log" FontSize="18" FontAttributes="Bold" Margin="0,12,0,0" />
+
+            <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Entries}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:EntryItem">
+                        <Border Padding="12" StrokeThickness="0"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10" />
+                            </Border.StrokeShape>
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8">
+                                <Label Text="{Binding TimeText}" FontSize="12"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray200}}" />
+                                <Label Grid.Row="1" Text="{Binding Name}" FontAttributes="Bold" FontSize="16" />
+                                <Label Grid.Row="2" Text="{Binding Comment}" IsVisible="{Binding HasComment}" />
+                                <Label Grid.Column="1" Text="{Binding Duration}" FontSize="12" HorizontalOptions="End" />
+                                <Button Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Text="✕"
+                                        BackgroundColor="Transparent" Padding="8,0"
+                                        TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray200}}"
+                                        VerticalOptions="End" HorizontalOptions="End"
+                                        Command="{Binding DeleteEntryCommand, Source={RelativeSource AncestorType={x:Type vm:TodayViewModel}}}"
+                                        CommandParameter="{Binding .}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

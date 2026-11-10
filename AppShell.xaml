@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="HourlyTracker.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:HourlyTracker.Pages"
+    Title="Hourly Tracker">
+
+    <TabBar>
+        <ShellContent Title="Today" Icon="{x:Null}" ContentTemplate="{DataTemplate pages:TodayPage}" Route="today" />
+        <ShellContent Title="Activities" Icon="{x:Null}" ContentTemplate="{DataTemplate pages:ActivitiesPage}" Route="activities" />
+        <ShellContent Title="Settings" Icon="{x:Null}" ContentTemplate="{DataTemplate pages:SettingsPage}" Route="settings" />
+    </TabBar>
+
+</Shell>

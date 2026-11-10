@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- Dialog-style theme for the hourly pop-up (Material so Chips/Buttons render correctly). -->
+	<style name="PromptTheme" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
+		<item name="android:windowCloseOnTouchOutside">false</item>
+	</style>
+</resources>

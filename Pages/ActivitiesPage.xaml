@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:HourlyTracker.ViewModels"
+             xmlns:models="clr-namespace:HourlyTracker.Models"
+             x:Class="HourlyTracker.Pages.ActivitiesPage"
+             x:DataType="vm:ActivitiesViewModel"
+             Title="Activities">
+    <Grid RowDefinitions="Auto,Auto,*" Padding="16" RowSpacing="10">
+
+        <Label Text="The things you usually do. They appear as choices in the hourly prompt."
+               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray200}}" />
+
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+            <Entry Placeholder="e.g. Work, Gym, Cooking" Text="{Binding NewName}"
+                   ReturnType="Done" ReturnCommand="{Binding AddCommand}" />
+            <Button Grid.Column="1" Text="Add" Command="{Binding AddCommand}" />
+        </Grid>
+
+        <CollectionView Grid.Row="2" ItemsSource="{Binding Items}">
+            <CollectionView.Header>
+                <Label Text="{Binding Message}" TextColor="{StaticResource Primary}" />
+            </CollectionView.Header>
+            <CollectionView.EmptyView>
+                <Label Text="No activities yet — add your first one above." Margin="0,24" />
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:ActivityType">
+                    <Grid ColumnDefinitions="*,Auto" Padding="0,6">
+                        <Label Text="{Binding Name}" FontSize="17" VerticalOptions="Center" />
+                        <Button Grid.Column="1" Text="Remove" BackgroundColor="Transparent"
+                                TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray200}}"
+                                Command="{Binding DeleteCommand, Source={RelativeSource AncestorType={x:Type vm:ActivitiesViewModel}}}"
+                                CommandParameter="{Binding .}" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>
