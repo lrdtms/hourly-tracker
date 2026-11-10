@@ -10,7 +10,7 @@ An Android app (built with .NET MAUI) that asks you **what you did** every hour 
 - **Active hours (sleep window)** – set a start and end time (default 07:00–22:00). No prompts fire outside it. Windows that cross midnight (e.g. 18:00–04:00) work too.
 - **Today** – a greeting with the day's one fact, the day as a strip of check-in slots (answered / missed / still to come), where the time went, and the full log with your comments. Step back through earlier days with ‹ ›.
 - **History** – 7 / 30 / 90 days as stacked columns of time per day, stacked by activity. Tap a day for its breakdown; tap an activity to see only it in the chart. A ranked list shows each activity's total and share.
-- **Looks** – "Editorial greeting" app style (Instrument Serif + Instrument Sans, one deep-teal accent, tonal panels, no shadows or gradients), a custom icon, and a short animated splash.
+- **Looks** – "Editorial greeting" app style (Instrument Serif + Instrument Sans, one deep-teal accent, tonal panels, no shadows or gradients), a custom icon, and a short animated splash drawn in code (no GIF decoding).
 - Survives reboots and app updates (alarms are re-registered automatically).
 
 ## How the prompt works
@@ -66,6 +66,10 @@ Drawn with `Microsoft.Maui.Graphics` (`GraphicsView` + `IDrawable`), no charting
 ## Reviewing the charts without waiting a month
 
 In **Debug** builds, Settings has *Load sample history (debug)*, which replaces all data with five weeks of believable entries. It does not exist in Release builds.
+
+## Startup and the splash
+
+Android's own splash can only be static, so the app shows the same mark, then plays a ~2 s animation on `SplashPage`. The animation is drawn on a `GraphicsView` and driven by MAUI's `Animation` class rather than played from a GIF. The app shell is built *before* the animation starts, so the main thread is idle while it runs. Measure startup on a **Release** build: Debug (JIT) startup is several times slower.
 
 ## Brand assets
 

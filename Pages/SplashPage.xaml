@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ctl="clr-namespace:HourlyTracker.Controls"
              x:Class="HourlyTracker.Pages.SplashPage"
              Shell.NavBarIsVisible="False"
              BackgroundColor="#1F201D">
-    <!-- The GIF's own background is exactly #1F201D (verified frame by frame), so it melts into the page. -->
+    <!-- The mark is drawn in code (no GIF decoding). Its resting frame matches Android's static splash. -->
     <Grid RowDefinitions="*,Auto,Auto,*" RowSpacing="0">
-        <Image x:Name="Mark" Grid.Row="1" Source="splash_rebuild.gif" IsAnimationPlaying="False"
-               WidthRequest="240" HeightRequest="240" HorizontalOptions="Center" />
+        <ctl:SplashMarkView x:Name="Mark" Grid.Row="1" HorizontalOptions="Center" />
         <Label x:Name="Name" Grid.Row="2" Text="Hourly Tracker" FontFamily="Serif" FontSize="30"
                TextColor="#F6F5F1" HorizontalOptions="Center" Margin="0,4,0,0" Opacity="0" />
     </Grid>

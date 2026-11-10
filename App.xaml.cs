@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HourlyTracker;
 
@@ -12,6 +12,11 @@ public partial class App : Application
 
 	protected override Window CreateWindow(IActivationState? activationState)
 	{
-		return new Window(new Pages.SplashPage());
+		// Do the heavy work now, while Android's static splash is still on screen and nothing is animating:
+		// build the shell (XAML inflation) and open/migrate the database on a background thread.
+		var shell = new AppShell();
+		_ = Task.Run(async () => await Services.TrackerDb.Instance.GetActivitiesAsync());
+
+		return new Window(new Pages.SplashPage(shell));
 	}
 }
