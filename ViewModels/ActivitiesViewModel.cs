@@ -11,7 +11,11 @@ public partial class ActivitiesViewModel : ObservableObject
     private readonly TrackerDb _db = TrackerDb.Instance;
 
     [ObservableProperty] private string _newName = "";
-    [ObservableProperty] private string _message = "";
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(HasMessage))] private string _message = "";
+    [ObservableProperty] private bool _isEmpty = true;
+    [ObservableProperty] private string _countText = "Your list";
+
+    public bool HasMessage => Message.Length > 0;
 
     public ObservableCollection<ActivityType> Items { get; } = new();
 
@@ -20,6 +24,8 @@ public partial class ActivitiesViewModel : ObservableObject
     {
         Items.Clear();
         foreach (var a in await _db.GetActivitiesAsync()) Items.Add(a);
+        IsEmpty = Items.Count == 0;
+        CountText = Items.Count == 0 ? "Your list" : Items.Count == 1 ? "1 activity" : $"{Items.Count} activities";
     }
 
     [RelayCommand]
@@ -36,7 +42,7 @@ public partial class ActivitiesViewModel : ObservableObject
         }
         else
         {
-            Message = $"\"{name}\" is already in your list.";
+            Message = $"“{name}” is already in your list.";
         }
     }
 

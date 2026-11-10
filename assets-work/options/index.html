@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Hourly Tracker — icon and splash options</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root{--bg:#fff;--ink:#1f201d;--muted:#636361;--panel:#f6f5f1}
+  *{box-sizing:border-box}
+  body{margin:0;padding:40px 24px 80px;background:var(--bg);color:var(--ink);font:16px/1.45 "Segoe UI",system-ui,sans-serif}
+  h1{font:400 44px/1.05 Georgia,serif;margin:0 0 6px}
+  h2{font:400 26px/1.1 Georgia,serif;margin:56px 0 4px}
+  p{color:var(--muted);margin:0 0 20px;max-width:60ch}
+  .row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+  @media(max-width:900px){.row{grid-template-columns:1fr}}
+  .card{background:var(--panel);border-radius:22px;padding:22px}
+  .card h3{margin:0 0 2px;font-size:18px} .card .k{font:600 13px/1 system-ui;color:#1b6e66;margin-bottom:8px;display:block}
+  .card p{font-size:14px;margin:0 0 16px}
+  .sizes{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap}
+  .ic{display:block}
+  .circle{border-radius:50%} .squircle{border-radius:28%} .tiny{border-radius:22%}
+  .wall{border-radius:14px;padding:14px;display:flex;gap:14px;align-items:flex-end;margin-top:12px}
+  .wall.light{background:#e9eef0} .wall.dark{background:#16181a}
+  .splash{display:flex;justify-content:center;border-radius:18px;overflow:hidden;margin-bottom:12px}
+  .splash img{width:100%;max-width:300px;display:block}
+  .phone-label{font-size:13px;color:#636361}
+</style></head>
+<body>
+<h1>Pick an icon and a splash</h1>
+<p>Three directions, each with an app icon and an animated splash. Mix freely, for example icon&nbsp;B with splash&nbsp;A. Every splash starts and ends on its resting mark, so the hand-off from Android's static splash is seamless.</p>
+
+<h2>App icon</h2>
+<p>Shown as Android will draw it: circle and rounded-square masks, at launcher size and at the small sizes where marks die. Light and dark wallpapers underneath.</p>
+<div class="row">
+  <div class="card"><span class="k">A</span><h3>Check-in ring</h3><p>Eight slots around a clock face with an orange hub: five answered, three still to come.</p>
+    <div class="sizes"><img class="ic circle" src="icon-a-1024.png" width="120"><img class="ic squircle" src="icon-a-1024.png" width="120"></div>
+    <div class="wall light"><img class="ic circle" src="icon-a-1024.png" width="48"><img class="ic squircle" src="icon-a-1024.png" width="48"><img class="ic tiny" src="icon-a-1024.png" width="32"><img class="ic tiny" src="icon-a-1024.png" width="24"></div>
+    <div class="wall dark"><img class="ic circle" src="icon-a-1024.png" width="48"><img class="ic squircle" src="icon-a-1024.png" width="48"><img class="ic tiny" src="icon-a-1024.png" width="32"><img class="ic tiny" src="icon-a-1024.png" width="24"></div></div>
+  <div class="card"><span class="k">B</span><h3>Stacked day</h3><p>One day as a column of time chunks, the same shape as your History chart. Dark ground.</p>
+    <div class="sizes"><img class="ic circle" src="icon-b-1024.png" width="120"><img class="ic squircle" src="icon-b-1024.png" width="120"></div>
+    <div class="wall light"><img class="ic circle" src="icon-b-1024.png" width="48"><img class="ic squircle" src="icon-b-1024.png" width="48"><img class="ic tiny" src="icon-b-1024.png" width="32"><img class="ic tiny" src="icon-b-1024.png" width="24"></div>
+    <div class="wall dark"><img class="ic circle" src="icon-b-1024.png" width="48"><img class="ic squircle" src="icon-b-1024.png" width="48"><img class="ic tiny" src="icon-b-1024.png" width="32"><img class="ic tiny" src="icon-b-1024.png" width="24"></div></div>
+  <div class="card"><span class="k">C</span><h3>H for hour</h3><p>Two tall slots joined by a warm crossbar. The light one on the shelf.</p>
+    <div class="sizes"><img class="ic circle" src="icon-c-1024.png" width="120"><img class="ic squircle" src="icon-c-1024.png" width="120"></div>
+    <div class="wall light"><img class="ic circle" src="icon-c-1024.png" width="48"><img class="ic squircle" src="icon-c-1024.png" width="48"><img class="ic tiny" src="icon-c-1024.png" width="32"><img class="ic tiny" src="icon-c-1024.png" width="24"></div>
+    <div class="wall dark"><img class="ic circle" src="icon-c-1024.png" width="48"><img class="ic squircle" src="icon-c-1024.png" width="48"><img class="ic tiny" src="icon-c-1024.png" width="32"><img class="ic tiny" src="icon-c-1024.png" width="24"></div></div>
+</div>
+
+<h2>Splash animation</h2>
+<p>1.8 seconds, loops. These are the real GIF files the app will play after Android's own splash.</p>
+<div class="row">
+  <div class="card"><span class="k">1</span><h3>Ripple</h3><p>A wave runs around the ring, lighting the slots still to come, and the hub swells.</p><div class="splash" style="background:#1B6E66"><img src="splash-a.gif" alt="Ripple splash"></div></div>
+  <div class="card"><span class="k">2</span><h3>Rebuild</h3><p>The column collapses and stacks itself back up from the bottom, chunk by chunk.</p><div class="splash" style="background:#1F201D"><img src="splash-b.gif" alt="Rebuild splash"></div></div>
+  <div class="card"><span class="k">3</span><h3>Crossbar</h3><p>The orange crossbar lifts away and drops back into the H.</p><div class="splash" style="background:#F6F5F1"><img src="splash-c.gif" alt="Crossbar splash"></div></div>
+</div>
+</body></html>

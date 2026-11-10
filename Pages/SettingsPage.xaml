@@ -4,76 +4,140 @@
              xmlns:vm="clr-namespace:HourlyTracker.ViewModels"
              x:Class="HourlyTracker.Pages.SettingsPage"
              x:DataType="vm:SettingsViewModel"
+             Shell.NavBarIsVisible="False"
              Title="Settings">
     <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="16">
+        <VerticalStackLayout Padding="20,12,20,28" Spacing="20">
 
-            <Grid ColumnDefinitions="*,Auto">
-                <Label Text="Hourly prompts" FontSize="18" FontAttributes="Bold" VerticalOptions="Center" />
-                <Switch Grid.Column="1" IsToggled="{Binding Enabled}" />
-            </Grid>
-            <Label Text="{Binding NextPromptText}" />
-
-            <Label Text="How often" FontAttributes="Bold" />
-            <Picker ItemsSource="{Binding IntervalOptions}" ItemDisplayBinding="{Binding Label, x:DataType=vm:IntervalOption}"
-                    SelectedItem="{Binding SelectedInterval}" />
-
-            <Label Text="Active hours (your sleep window)" FontAttributes="Bold" Margin="0,8,0,0" />
-            <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
-                <Label Text="From" VerticalOptions="Center" />
-                <TimePicker Grid.Column="1" Time="{Binding ActiveStart}" Format="HH:mm" />
-                <Label Grid.Column="2" Text="to" VerticalOptions="Center" />
-                <TimePicker Grid.Column="3" Time="{Binding ActiveEnd}" Format="HH:mm" />
-            </Grid>
-            <Label Text="{Binding WindowHint}" FontSize="13"
-                   TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray200}}" />
-
-            <Label Text="Permissions" FontSize="18" FontAttributes="Bold" Margin="0,12,0,0" />
-            <Label Text="Everything is granted — prompts will show reliably." TextColor="Green">
-                <Label.Triggers>
-                    <MultiTrigger TargetType="Label">
-                        <MultiTrigger.Conditions>
-                            <BindingCondition Binding="{Binding NeedsNotifications}" Value="False" />
-                            <BindingCondition Binding="{Binding NeedsExactAlarms}" Value="False" />
-                            <BindingCondition Binding="{Binding NeedsOverlay}" Value="False" />
-                            <BindingCondition Binding="{Binding NeedsFullScreen}" Value="False" />
-                        </MultiTrigger.Conditions>
-                        <Setter Property="IsVisible" Value="True" />
-                    </MultiTrigger>
-                </Label.Triggers>
-                <Label.Style>
-                    <Style TargetType="Label">
-                        <Setter Property="IsVisible" Value="False" />
-                    </Style>
-                </Label.Style>
-            </Label>
-
-            <VerticalStackLayout Spacing="4" IsVisible="{Binding NeedsNotifications}">
-                <Label Text="Notifications are blocked" FontAttributes="Bold" />
-                <Label Text="Needed so the prompt can show at all." FontSize="13" />
-                <Button Text="Allow notifications" Command="{Binding FixNotificationsCommand}" />
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Settings" Style="{StaticResource Greeting}" />
+                <Label Text="{Binding NextPromptText}" Style="{StaticResource Lead}" />
             </VerticalStackLayout>
 
-            <VerticalStackLayout Spacing="4" IsVisible="{Binding NeedsExactAlarms}">
-                <Label Text="Exact alarms are off" FontAttributes="Bold" />
-                <Label Text="Without this Android may delay prompts by several minutes." FontSize="13" />
-                <Button Text="Allow exact alarms" Command="{Binding FixExactAlarmsCommand}" />
+            <!-- Check-ins -->
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Check-ins" Style="{StaticResource Section}" FontSize="16" />
+                <Border Style="{StaticResource Panel}" Padding="16">
+                    <VerticalStackLayout Spacing="0">
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,4">
+                            <VerticalStackLayout>
+                                <Label Text="Ask me what I did" Style="{StaticResource Section}" />
+                                <Label Text="A pop-up on the clock, even with the app closed." Style="{StaticResource Small}" />
+                            </VerticalStackLayout>
+                            <Switch Grid.Column="1" IsToggled="{Binding Enabled}" VerticalOptions="Center" />
+                        </Grid>
+                        <BoxView Style="{StaticResource Hairline}" Margin="0,12" Color="{StaticResource Border}" />
+                        <Label Text="How often" Style="{StaticResource Section}" />
+                        <Picker ItemsSource="{Binding IntervalOptions}" ItemDisplayBinding="{Binding Label, x:DataType=vm:IntervalOption}"
+                                SelectedItem="{Binding SelectedInterval}" Margin="0,2,0,0" />
+                    </VerticalStackLayout>
+                </Border>
             </VerticalStackLayout>
 
-            <VerticalStackLayout Spacing="4" IsVisible="{Binding NeedsOverlay}">
-                <Label Text="Display over other apps is off" FontAttributes="Bold" />
-                <Label Text="Lets the prompt pop up on top of whatever you're doing instead of only appearing as a notification." FontSize="13" />
-                <Button Text="Allow pop-up over other apps" Command="{Binding FixOverlayCommand}" />
+            <!-- Active hours -->
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Active hours" Style="{StaticResource Section}" FontSize="16" />
+                <Border Style="{StaticResource Panel}" Padding="16">
+                    <VerticalStackLayout Spacing="8">
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <VerticalStackLayout>
+                                <Label Text="From" Style="{StaticResource Small}" />
+                                <TimePicker Time="{Binding ActiveStart}" Format="HH:mm" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="Until" Style="{StaticResource Small}" />
+                                <TimePicker Time="{Binding ActiveEnd}" Format="HH:mm" />
+                            </VerticalStackLayout>
+                        </Grid>
+                        <Label Text="{Binding WindowHint}" Style="{StaticResource MutedText}" />
+                    </VerticalStackLayout>
+                </Border>
             </VerticalStackLayout>
 
-            <VerticalStackLayout Spacing="4" IsVisible="{Binding NeedsFullScreen}">
-                <Label Text="Full-screen prompts are off" FontAttributes="Bold" />
-                <Label Text="Lets the prompt take over the screen when the phone is locked." FontSize="13" />
-                <Button Text="Allow full-screen prompts" Command="{Binding FixFullScreenCommand}" />
+            <!-- Permissions: every row states its state, allowed or not -->
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Permissions" Style="{StaticResource Section}" FontSize="16" />
+                <Border Style="{StaticResource Panel}" Padding="16">
+                    <VerticalStackLayout Spacing="0">
+
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,6" ColumnSpacing="10">
+                            <VerticalStackLayout>
+                                <Label Text="Notifications" Style="{StaticResource Section}" />
+                                <Label Text="Needed to show the check-in at all." Style="{StaticResource Small}" />
+                            </VerticalStackLayout>
+                            <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                                <Border BackgroundColor="{StaticResource PillOkBg}" StrokeThickness="0" Padding="10,3"
+                                        IsVisible="{Binding NeedsNotifications, Converter={StaticResource Not}}">
+                                    <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                    <Label Text="Allowed" FontSize="12" TextColor="{StaticResource PillOkInk}" />
+                                </Border>
+                                <Button Text="Allow" Style="{StaticResource Tonal}" IsVisible="{Binding NeedsNotifications}"
+                                        Command="{Binding FixNotificationsCommand}" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                        <BoxView Style="{StaticResource Hairline}" Color="{StaticResource Border}" />
+
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,6" ColumnSpacing="10">
+                            <VerticalStackLayout>
+                                <Label Text="Exact alarms" Style="{StaticResource Section}" />
+                                <Label Text="So check-ins land on the hour, not minutes late." Style="{StaticResource Small}" />
+                            </VerticalStackLayout>
+                            <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                                <Border BackgroundColor="{StaticResource PillOkBg}" StrokeThickness="0" Padding="10,3"
+                                        IsVisible="{Binding NeedsExactAlarms, Converter={StaticResource Not}}">
+                                    <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                    <Label Text="Allowed" FontSize="12" TextColor="{StaticResource PillOkInk}" />
+                                </Border>
+                                <Button Text="Allow" Style="{StaticResource Tonal}" IsVisible="{Binding NeedsExactAlarms}"
+                                        Command="{Binding FixExactAlarmsCommand}" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                        <BoxView Style="{StaticResource Hairline}" Color="{StaticResource Border}" />
+
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,6" ColumnSpacing="10">
+                            <VerticalStackLayout>
+                                <Label Text="Pop up over other apps" Style="{StaticResource Section}" />
+                                <Label Text="Lets the check-in appear on top of whatever you're doing." Style="{StaticResource Small}" />
+                            </VerticalStackLayout>
+                            <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                                <Border BackgroundColor="{StaticResource PillOkBg}" StrokeThickness="0" Padding="10,3"
+                                        IsVisible="{Binding NeedsOverlay, Converter={StaticResource Not}}">
+                                    <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                    <Label Text="Allowed" FontSize="12" TextColor="{StaticResource PillOkInk}" />
+                                </Border>
+                                <Button Text="Allow" Style="{StaticResource Tonal}" IsVisible="{Binding NeedsOverlay}"
+                                        Command="{Binding FixOverlayCommand}" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                        <BoxView Style="{StaticResource Hairline}" Color="{StaticResource Border}" />
+
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,6" ColumnSpacing="10">
+                            <VerticalStackLayout>
+                                <Label Text="Full-screen check-ins" Style="{StaticResource Section}" />
+                                <Label Text="Lets it take over a locked screen." Style="{StaticResource Small}" />
+                            </VerticalStackLayout>
+                            <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                                <Border BackgroundColor="{StaticResource PillOkBg}" StrokeThickness="0" Padding="10,3"
+                                        IsVisible="{Binding NeedsFullScreen, Converter={StaticResource Not}}">
+                                    <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                    <Label Text="Allowed" FontSize="12" TextColor="{StaticResource PillOkInk}" />
+                                </Border>
+                                <Button Text="Allow" Style="{StaticResource Tonal}" IsVisible="{Binding NeedsFullScreen}"
+                                        Command="{Binding FixFullScreenCommand}" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
             </VerticalStackLayout>
 
-            <Button Text="Send a test prompt now" Command="{Binding TestPromptCommand}" Margin="0,12,0,0" />
+            <Button Text="Send a test check-in" Command="{Binding TestPromptCommand}" HorizontalOptions="Start" />
 
+            <!-- Developer-only: present in DEBUG builds -->
+            <VerticalStackLayout Spacing="8" IsVisible="{Binding IsDebug}">
+                <Button Text="Load sample history (debug)" Style="{StaticResource Tonal}"
+                        Command="{Binding LoadSampleCommand}" HorizontalOptions="Start" />
+                <Label Text="{Binding SampleStatus}" Style="{StaticResource Small}" />
+            </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

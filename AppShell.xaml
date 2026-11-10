@@ -4,12 +4,18 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:HourlyTracker.Pages"
+    Shell.BackgroundColor="{StaticResource Ground}"
+    Shell.TabBarBackgroundColor="{StaticResource Ground}"
+    Shell.TabBarForegroundColor="{StaticResource Accent}"
+    Shell.TabBarTitleColor="{StaticResource Accent}"
+    Shell.TabBarUnselectedColor="{StaticResource Muted}"
     Title="Hourly Tracker">
 
     <TabBar>
-        <ShellContent Title="Today" Icon="{x:Null}" ContentTemplate="{DataTemplate pages:TodayPage}" Route="today" />
-        <ShellContent Title="Activities" Icon="{x:Null}" ContentTemplate="{DataTemplate pages:ActivitiesPage}" Route="activities" />
-        <ShellContent Title="Settings" Icon="{x:Null}" ContentTemplate="{DataTemplate pages:SettingsPage}" Route="settings" />
+        <ShellContent Title="Today" Icon="tab_today.png" ContentTemplate="{DataTemplate pages:TodayPage}" Route="today" />
+        <ShellContent Title="History" Icon="tab_history.png" ContentTemplate="{DataTemplate pages:HistoryPage}" Route="history" />
+        <ShellContent Title="Activities" Icon="tab_activities.png" ContentTemplate="{DataTemplate pages:ActivitiesPage}" Route="activities" />
+        <ShellContent Title="Settings" Icon="tab_settings.png" ContentTemplate="{DataTemplate pages:SettingsPage}" Route="settings" />
     </TabBar>
 
 </Shell>

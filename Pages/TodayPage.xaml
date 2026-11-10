@@ -2,69 +2,102 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:HourlyTracker.ViewModels"
+             xmlns:ctl="clr-namespace:HourlyTracker.Controls"
              x:Class="HourlyTracker.Pages.TodayPage"
              x:DataType="vm:TodayViewModel"
-             Title="Time">
+             Shell.NavBarIsVisible="False"
+             Title="Today">
     <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="14">
+        <VerticalStackLayout Padding="20,12,20,28" Spacing="16">
 
-            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
-                <Button Text="‹" WidthRequest="48" Command="{Binding PreviousDayCommand}" />
-                <Label Grid.Column="1" Text="{Binding DayTitle}" FontSize="22" FontAttributes="Bold"
-                       HorizontalOptions="Center" VerticalOptions="Center" />
-                <Button Grid.Column="2" Text="›" WidthRequest="48"
+            <!-- Greeting is the h1. The line under it is today's one fact. -->
+            <VerticalStackLayout Spacing="6">
+                <Label Text="{Binding Greeting}" Style="{StaticResource Greeting}" />
+                <Label Text="{Binding Finding}" Style="{StaticResource Lead}" />
+            </VerticalStackLayout>
+
+            <!-- Day navigation -->
+            <HorizontalStackLayout Spacing="4">
+                <Button Text="‹" Style="{StaticResource Tonal}" WidthRequest="44" Padding="0"
+                        Command="{Binding PreviousDayCommand}" />
+                <Label Text="{Binding DayLabel}" Style="{StaticResource Section}" VerticalOptions="Center"
+                       WidthRequest="110" HorizontalTextAlignment="Center" />
+                <Button Text="›" Style="{StaticResource Tonal}" WidthRequest="44" Padding="0"
                         Command="{Binding NextDayCommand}" IsEnabled="{Binding CanGoNext}" />
-            </Grid>
+            </HorizontalStackLayout>
 
-            <Label Text="{Binding SummaryText}"
-                   TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray200}}" />
+            <!-- First run: nothing to pick from yet -->
+            <Border Style="{StaticResource Panel}" IsVisible="{Binding HasActivities, Converter={StaticResource Not}}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Start with the things you usually do" Style="{StaticResource Section}" />
+                    <Label Text="Add your activities once, then each check-in is a single tap."
+                           Style="{StaticResource MutedText}" />
+                    <Button Text="Add activities" Command="{Binding OpenActivitiesCommand}" HorizontalOptions="Start" />
+                </VerticalStackLayout>
+            </Border>
 
-            <Label Text="Where your time went" FontSize="18" FontAttributes="Bold" />
-            <Label IsVisible="{Binding IsEmpty}"
-                   Text="Answer the hourly prompt (or use the Settings tab to send a test one) and your totals will show up here." />
+            <!-- The day as check-in slots -->
+            <Border Style="{StaticResource Panel}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{Binding StripCaption}" Style="{StaticResource Section}" />
+                    <ctl:DayStripView x:Name="Strip" />
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="{Binding StripStart}" Style="{StaticResource Small}" />
+                        <Label Grid.Column="1" Text="{Binding StripEnd}" Style="{StaticResource Small}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
 
-            <VerticalStackLayout Spacing="12" BindableLayout.ItemsSource="{Binding Totals}">
-                <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="vm:ActivityTotal">
-                        <VerticalStackLayout Spacing="4">
-                            <Grid ColumnDefinitions="*,Auto">
-                                <Label Text="{Binding Name}" FontAttributes="Bold" />
-                                <Label Grid.Column="1" Text="{Binding Text}" />
-                            </Grid>
-                            <ProgressBar Progress="{Binding Fraction}" />
-                        </VerticalStackLayout>
-                    </DataTemplate>
-                </BindableLayout.ItemTemplate>
-            </VerticalStackLayout>
+            <!-- Where it went -->
+            <Border Style="{StaticResource Panel}" IsVisible="{Binding IsEmpty, Converter={StaticResource Not}}">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Where it went" Style="{StaticResource Section}" />
+                    <VerticalStackLayout Spacing="14" BindableLayout.ItemsSource="{Binding Totals}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ActivityTotal">
+                                <VerticalStackLayout Spacing="6">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Text="{Binding Name}" />
+                                        <Label Grid.Column="1" Text="{Binding Text}" Style="{StaticResource MutedText}" />
+                                    </Grid>
+                                    <ctl:BarView Fraction="{Binding Fraction}" BarColor="{Binding BarColor}" />
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
 
-            <Label Text="Log" FontSize="18" FontAttributes="Bold" Margin="0,12,0,0" />
-
-            <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Entries}">
-                <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="vm:EntryItem">
-                        <Border Padding="12" StrokeThickness="0"
-                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="10" />
-                            </Border.StrokeShape>
-                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8">
-                                <Label Text="{Binding TimeText}" FontSize="12"
-                                       TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray200}}" />
-                                <Label Grid.Row="1" Text="{Binding Name}" FontAttributes="Bold" FontSize="16" />
-                                <Label Grid.Row="2" Text="{Binding Comment}" IsVisible="{Binding HasComment}" />
-                                <Label Grid.Column="1" Text="{Binding Duration}" FontSize="12" HorizontalOptions="End" />
-                                <Button Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Text="✕"
-                                        BackgroundColor="Transparent" Padding="8,0"
-                                        TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray200}}"
-                                        VerticalOptions="End" HorizontalOptions="End"
-                                        Command="{Binding DeleteEntryCommand, Source={RelativeSource AncestorType={x:Type vm:TodayViewModel}}}"
-                                        CommandParameter="{Binding .}" />
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </BindableLayout.ItemTemplate>
-            </VerticalStackLayout>
-
+            <!-- Log -->
+            <Border Style="{StaticResource Panel}" IsVisible="{Binding IsEmpty, Converter={StaticResource Not}}">
+                <VerticalStackLayout Spacing="0">
+                    <Label Text="Log" Style="{StaticResource Section}" Margin="0,0,0,6" />
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Entries}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:EntryItem">
+                                <VerticalStackLayout>
+                                    <BoxView Style="{StaticResource Hairline}" />
+                                    <Grid ColumnDefinitions="*,Auto" Padding="0,12" ColumnSpacing="8">
+                                        <VerticalStackLayout Spacing="2">
+                                            <Label Text="{Binding TimeText}" Style="{StaticResource Small}" />
+                                            <Label Text="{Binding Name}" Style="{StaticResource Section}" FontSize="16" />
+                                            <Label Text="{Binding Comment}" IsVisible="{Binding HasComment}"
+                                                   Style="{StaticResource MutedText}" />
+                                        </VerticalStackLayout>
+                                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="End" Spacing="0">
+                                            <Label Text="{Binding Duration}" HorizontalTextAlignment="End" />
+                                            <Button Text="Remove" Style="{StaticResource Quiet}" FontSize="12" Padding="0"
+                                                    HorizontalOptions="End"
+                                                    Command="{Binding DeleteEntryCommand, Source={RelativeSource AncestorType={x:Type vm:TodayViewModel}}}"
+                                                    CommandParameter="{Binding .}" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

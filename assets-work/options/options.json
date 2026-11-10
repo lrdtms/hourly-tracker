@@ -1,0 +1,20 @@
+[
+  {
+    "id": "a",
+    "name": "Check-in ring",
+    "bg": "#1B6E66",
+    "note": "Eight slots around a clock face with an orange hub. Five answered, three still to come."
+  },
+  {
+    "id": "b",
+    "name": "Stacked day",
+    "bg": "#1F201D",
+    "note": "One day as a column of time chunks, like the History chart."
+  },
+  {
+    "id": "c",
+    "name": "H for hour",
+    "bg": "#F6F5F1",
+    "note": "Two tall slots joined by a warm crossbar."
+  }
+]

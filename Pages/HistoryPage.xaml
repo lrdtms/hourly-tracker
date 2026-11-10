@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:HourlyTracker.ViewModels"
+             xmlns:ctl="clr-namespace:HourlyTracker.Controls"
+             x:Class="HourlyTracker.Pages.HistoryPage"
+             x:DataType="vm:HistoryViewModel"
+             Shell.NavBarIsVisible="False"
+             Title="History">
+    <ScrollView>
+        <VerticalStackLayout Padding="20,12,20,28" Spacing="16">
+
+            <Label Text="History" Style="{StaticResource Greeting}" />
+
+            <!-- Range: a segmented track of pills -->
+            <Border Style="{StaticResource Panel}" Padding="4" BackgroundColor="{StaticResource SurfaceDeep}"
+                    HorizontalOptions="Start">
+                <Border.StrokeShape><RoundRectangle CornerRadius="22" /></Border.StrokeShape>
+                <HorizontalStackLayout x:Name="RangeRow" Spacing="2" />
+            </Border>
+
+            <!-- The answer: the headline figure leads -->
+            <VerticalStackLayout Spacing="2">
+                <Label Text="{Binding Headline}" Style="{StaticResource Kpi}" FontSize="44" />
+                <Label Text="{Binding Subline}" Style="{StaticResource Lead}" />
+                <Label Text="{Binding Finding}" Style="{StaticResource Section}" Margin="0,8,0,0" />
+            </VerticalStackLayout>
+
+            <Border Style="{StaticResource Panel}" Padding="14,16,14,16" IsVisible="{Binding IsEmpty}">
+                <Label Text="No history yet. Answer a check-in and your days will start to stack up here."
+                       Style="{StaticResource Lead}" />
+            </Border>
+
+            <!-- Main chart: the one white card -->
+            <Border Style="{StaticResource Card}" IsVisible="{Binding IsEmpty, Converter={StaticResource Not}}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Time per day" Style="{StaticResource Section}" />
+                    <ctl:StackedChartView x:Name="Chart" HeightRequest="220" />
+                    <FlexLayout x:Name="LegendRow" Wrap="Wrap" />
+                    <Label Text="{Binding Detail}" Style="{StaticResource MutedText}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- By activity: ranked bars in the activity's own colour. Tap one to isolate it in the chart. -->
+            <Border Style="{StaticResource Panel}" IsVisible="{Binding IsEmpty, Converter={StaticResource Not}}">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="By activity" Style="{StaticResource Section}" />
+                    <Label Text="Tap one to see only it in the chart." Style="{StaticResource Small}" Margin="0,0,0,8" />
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Rows}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ActivityRow">
+                                <Border Padding="10,8" Margin="-10,0" StrokeThickness="0" BackgroundColor="Transparent">
+                                    <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource AccentSoft}" />
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding ToggleEmphasisCommand, Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}}"
+                                            CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <VerticalStackLayout Spacing="6">
+                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                            <Label Text="{Binding Name}" Style="{StaticResource Section}" />
+                                            <HorizontalStackLayout Grid.Column="1" Spacing="8">
+                                                <Label Text="{Binding Duration}" />
+                                                <Label Text="{Binding Share}" Style="{StaticResource MutedText}" WidthRequest="38"
+                                                       HorizontalTextAlignment="End" />
+                                            </HorizontalStackLayout>
+                                        </Grid>
+                                        <ctl:BarView Fraction="{Binding Fraction}" BarColor="{Binding BarColor}" />
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -5,36 +5,54 @@
              xmlns:models="clr-namespace:HourlyTracker.Models"
              x:Class="HourlyTracker.Pages.ActivitiesPage"
              x:DataType="vm:ActivitiesViewModel"
+             Shell.NavBarIsVisible="False"
              Title="Activities">
-    <Grid RowDefinitions="Auto,Auto,*" Padding="16" RowSpacing="10">
+    <ScrollView>
+        <VerticalStackLayout Padding="20,12,20,28" Spacing="16">
 
-        <Label Text="The things you usually do. They appear as choices in the hourly prompt."
-               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray200}}" />
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Activities" Style="{StaticResource Greeting}" />
+                <Label Text="The things you usually do. They become the choices in every check-in."
+                       Style="{StaticResource Lead}" />
+            </VerticalStackLayout>
 
-        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
-            <Entry Placeholder="e.g. Work, Gym, Cooking" Text="{Binding NewName}"
-                   ReturnType="Done" ReturnCommand="{Binding AddCommand}" />
-            <Button Grid.Column="1" Text="Add" Command="{Binding AddCommand}" />
-        </Grid>
-
-        <CollectionView Grid.Row="2" ItemsSource="{Binding Items}">
-            <CollectionView.Header>
-                <Label Text="{Binding Message}" TextColor="{StaticResource Primary}" />
-            </CollectionView.Header>
-            <CollectionView.EmptyView>
-                <Label Text="No activities yet — add your first one above." Margin="0,24" />
-            </CollectionView.EmptyView>
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:ActivityType">
-                    <Grid ColumnDefinitions="*,Auto" Padding="0,6">
-                        <Label Text="{Binding Name}" FontSize="17" VerticalOptions="Center" />
-                        <Button Grid.Column="1" Text="Remove" BackgroundColor="Transparent"
-                                TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray200}}"
-                                Command="{Binding DeleteCommand, Source={RelativeSource AncestorType={x:Type vm:ActivitiesViewModel}}}"
-                                CommandParameter="{Binding .}" />
+            <Border Style="{StaticResource Panel}" Padding="14">
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <Border BackgroundColor="White" StrokeThickness="0" Padding="16,0" HeightRequest="44">
+                            <Border.StrokeShape><RoundRectangle CornerRadius="22" /></Border.StrokeShape>
+                            <Entry Placeholder="Work, Gym, Cooking…" Text="{Binding NewName}"
+                                   ReturnType="Done" ReturnCommand="{Binding AddCommand}" VerticalOptions="Center" />
+                        </Border>
+                        <Button Grid.Column="1" Text="Add" Command="{Binding AddCommand}" />
                     </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </Grid>
+                    <Label Text="{Binding Message}" Style="{StaticResource MutedText}" TextColor="{StaticResource Negative}"
+                           IsVisible="{Binding HasMessage}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource Panel}">
+                <VerticalStackLayout>
+                    <Label Text="{Binding CountText}" Style="{StaticResource Section}" Margin="0,0,0,6" />
+                    <Label Text="Nothing here yet. Add your first activity above."
+                           Style="{StaticResource MutedText}" IsVisible="{Binding IsEmpty}" />
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Items}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:ActivityType">
+                                <VerticalStackLayout>
+                                    <BoxView Style="{StaticResource Hairline}" />
+                                    <Grid ColumnDefinitions="*,Auto" Padding="0,4">
+                                        <Label Text="{Binding Name}" FontSize="16" VerticalOptions="Center" />
+                                        <Button Grid.Column="1" Text="Remove" Style="{StaticResource Quiet}"
+                                                Command="{Binding DeleteCommand, Source={RelativeSource AncestorType={x:Type vm:ActivitiesViewModel}}}"
+                                                CommandParameter="{Binding .}" />
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

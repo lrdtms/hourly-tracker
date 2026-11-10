@@ -10,6 +10,7 @@ public partial class TodayPage : ContentPage
     {
         InitializeComponent();
         BindingContext = _vm = vm;
+        _vm.StripChanged = slots => Strip.SetSlots(slots);
     }
 
     protected override async void OnAppearing()

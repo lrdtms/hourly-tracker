@@ -93,6 +93,23 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand] private void FixFullScreen() => _platform.OpenFullScreenIntentSettings();
     [RelayCommand] private void TestPrompt() => _platform.ShowTestPrompt();
 
+    public bool IsDebug =>
+#if DEBUG
+        true;
+#else
+        false;
+#endif
+
+    /// <summary>DEBUG builds only: replaces all data with 5 weeks of sample history to review the charts.</summary>
+    [RelayCommand]
+    private async Task LoadSampleAsync()
+    {
+        await SampleData.LoadAsync();
+        SampleStatus = "Sample data loaded. Open Today and History.";
+    }
+
+    [ObservableProperty] private string _sampleStatus = "";
+
     private static string LabelFor(int minutes) => minutes switch
     {
         60 => "Every hour",

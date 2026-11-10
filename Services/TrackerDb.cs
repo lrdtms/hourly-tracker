@@ -76,6 +76,32 @@ public sealed class TrackerDb
         await db.DeleteAsync<LogEntry>(id);
     }
 
+    /// <summary>Entries whose slot ends within [fromDay, toDay] (both calendar days, inclusive).</summary>
+    public async Task<List<LogEntry>> GetEntriesRangeAsync(DateTime fromDay, DateTime toDay)
+    {
+        var db = await Db();
+        var start = fromDay.Date;
+        var end = toDay.Date.AddDays(1);
+        return await db.Table<LogEntry>()
+            .Where(e => e.SlotEnd > start && e.SlotEnd <= end)
+            .OrderBy(e => e.SlotEnd)
+            .ToListAsync();
+    }
+
+    public async Task ClearAllAsync()
+    {
+        var db = await Db();
+        await db.DeleteAllAsync<LogEntry>();
+        await db.DeleteAllAsync<ActivityType>();
+    }
+
+    public async Task InsertManyAsync(IEnumerable<ActivityType> activities, IEnumerable<LogEntry> entries)
+    {
+        var db = await Db();
+        await db.InsertAllAsync(activities);
+        await db.InsertAllAsync(entries);
+    }
+
     /// <summary>Entries whose slot ends on the given calendar day.</summary>
     public async Task<List<LogEntry>> GetEntriesForDayAsync(DateTime day)
     {
